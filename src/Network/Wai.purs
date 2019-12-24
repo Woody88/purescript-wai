@@ -1,6 +1,6 @@
 module Network.Wai where 
 
-import Prelude (mempty, (<$>))
+import Prelude (Unit, mempty, (<$>))
 
 import Data.Maybe (Maybe(Just))
 import Effect (Effect)
@@ -15,9 +15,7 @@ import URI.Host (Host(..))
 import URI.Path (Path(..))
 import URI.Host.IPv4Address (unsafeFromInts) as Host
 
-type Application = Request -> (Response -> Effect ResponseReceived) -> Effect ResponseReceived
-
-data ResponseReceived = ResponseReceived
+type Application = Request -> (Response -> Effect Unit) -> Effect Unit
 
 type Middleware = Application -> Application
 
@@ -37,7 +35,7 @@ defaultRequest =
             }
 
 -- | Creating 'Response' from 'L.ByteString'. This is a wrapper for
---   'responseBuilder'.
+--   'responseBuilder'. 
 responseStr :: Status -> ResponseHeaders -> String -> Response
 responseStr = ResponseString 
 
