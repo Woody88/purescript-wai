@@ -1,19 +1,15 @@
 module Network.Wai where 
 
-import Prelude (Unit, mempty, (<$>))
+import Prelude (Unit, mempty, pure)
 
-import Data.Maybe (Maybe(Just))
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Effect.Class (liftEffect)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
 import Network.Wai.Internal (FilePath, Request(..), RequestBodyLength(..), Response(..))
-import Node.Buffer as Buffer
 import Node.Stream as Stream
 import URI.Extra.QueryPairs (QueryPairs(..))
-import URI.Host (Host(..))
 import URI.Path (Path(..))
-import URI.Host.IPv4Address (unsafeFromInts) as Host
 
 type Application = Request -> (Response -> Effect Unit) -> Effect Unit
 
@@ -21,17 +17,21 @@ type Middleware = Application -> Application
 
 defaultRequest :: Request
 defaultRequest = 
-    Request { requestMethod: H.GET
+    Request { method: H.GET
             , rawPathInfo: mempty
             , httpVersion: H.http10
             , rawQueryString: mempty
             , requestHeaders: []
             , isSecure: false
-            , remoteHost: IPv4Address (Host.unsafeFromInts 0 0 0 0)
+            , remoteHost: Nothing
             , pathInfo: Path []
             , queryString: QueryPairs []
-            , body:  liftEffect (Just <$> Buffer.create 0)
+            , body: pure Nothing
             , bodyLength: KnownLength 0
+            , headerHost: Nothing
+            , headerRange: Nothing
+            , headerReferer: Nothing
+            , headerUserAgent: Nothing
             }
 
 -- | Creating 'Response' from 'L.ByteString'. This is a wrapper for
