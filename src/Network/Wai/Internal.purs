@@ -2,11 +2,11 @@ module Network.Wai.Internal where
 
 import Data.Maybe (Maybe)
 import Effect.Aff (Aff)
-import Network.HTTP.Types as H 
-import Node.Buffer (Buffer)
-import Node.Stream (Readable)
 import Network.HTTP.Types (HostPortPair, Path, QueryPairs) as URI
 import Network.HTTP.Types (Key, Value, Host, Port)
+import Network.HTTP.Types as H
+import Node.Buffer (Buffer)
+import Node.Stream (Readable)
 
 type FilePath = String 
 
