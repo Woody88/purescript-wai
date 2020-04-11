@@ -7,6 +7,7 @@ import Network.HTTP.Types (Key, Value, Host, Port)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.Stream (Duplex)
+import Node.Net.Socket (Socket)
 
 type FilePath = String 
 
@@ -30,6 +31,7 @@ newtype Request
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders Duplex
+              | ResponseSocket H.Status H.ResponseHeaders Socket 
               | ResponseFile   H.Status H.ResponseHeaders String
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 

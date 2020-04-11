@@ -8,6 +8,7 @@ import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
 import Network.Wai.Internal (FilePath, Request(..), RequestBodyLength(..), Response(..))
 import Node.Stream as Stream
+import Node.Net.Socket as Net
 import URI.Extra.QueryPairs (QueryPairs(..))
 import URI.Path (Path(..))
 
@@ -46,3 +47,6 @@ responseFile = ResponseFile
 -- | Creating 'Response' from a readable stream 
 responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
 responseStream = ResponseStream
+
+responseSocket :: Status -> ResponseHeaders -> Net.Socket -> Response 
+responseSocket = ResponseSocket
