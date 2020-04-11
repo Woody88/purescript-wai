@@ -44,5 +44,5 @@ responseFile :: Status -> ResponseHeaders -> FilePath -> Response
 responseFile = ResponseFile 
 
 -- | Creating 'Response' from a readable stream 
-responseStream :: Status -> ResponseHeaders -> Stream.Readable () -> Response 
+responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
 responseStream = ResponseStream

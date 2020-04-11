@@ -6,7 +6,7 @@ import Network.HTTP.Types (HostPortPair, Path, QueryPairs) as URI
 import Network.HTTP.Types (Key, Value, Host, Port)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
-import Node.Stream (Readable)
+import Node.Stream (Duplex)
 
 type FilePath = String 
 
@@ -29,7 +29,7 @@ newtype Request
               }
 
 data Response = ResponseString H.Status H.ResponseHeaders String
-              | ResponseStream H.Status H.ResponseHeaders (Readable ())
+              | ResponseStream H.Status H.ResponseHeaders Duplex
               | ResponseFile   H.Status H.ResponseHeaders String
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
