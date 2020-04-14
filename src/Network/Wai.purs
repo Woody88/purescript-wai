@@ -33,6 +33,9 @@ defaultRequest =
             , headerRange: Nothing
             , headerReferer: Nothing
             , headerUserAgent: Nothing
+            , rawHeader: Nothing
+            , nodeRequest: Nothing 
+            , socket: Nothing  
             }
 
 -- | Creating 'Response' from 'L.ByteString'. This is a wrapper for
@@ -48,5 +51,5 @@ responseFile = ResponseFile
 responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
 responseStream = ResponseStream
 
-responseSocket :: Status -> ResponseHeaders -> Net.Socket -> Response 
+responseSocket :: (Net.Socket -> Effect Unit) -> Response 
 responseSocket = ResponseSocket
