@@ -11,6 +11,7 @@ You can edit this file as you like.
   , "node-http"
   , "node-net"
   , "node-streams"
+  , "node-url"
   , "psci-support"
   ]
 , packages = ./packages.dhall

@@ -5,8 +5,7 @@ import Prelude
 import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
-import Network.HTTP.Types (HostPortPair, Path, QueryPairs) as URI
-import Network.HTTP.Types (Key, Value, Host, Port)
+import Foreign.Object (Object)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.HTTP as HTTP
@@ -22,17 +21,16 @@ newtype Request
               , rawQueryString  :: String
               , requestHeaders  :: H.RequestHeaders
               , isSecure        :: Boolean
-              , remoteHost      :: URI.HostPortPair Host Port 
-              , pathInfo        :: URI.Path
-              , queryString     :: URI.QueryPairs Key Value
+              , remoteHost      :: String 
+              , pathInfo        :: Array String 
+              , queryString     :: Object String 
               , body            :: Aff (Maybe Buffer)
               , bodyLength      :: RequestBodyLength
-              , headerHost      :: URI.HostPortPair Host Port 
+              , headerHost      :: String 
               , headerRange     :: Maybe String 
               , headerReferer   :: Maybe String 
               , headerUserAgent :: Maybe String
               , rawHeader       :: Maybe Buffer
-              , socket          :: Maybe Socket 
               , nodeRequest     :: Maybe HTTP.Request
               }
 

@@ -1,16 +1,15 @@
 module Network.Wai where 
 
-import Prelude (Unit, mempty, pure)
+import Prelude 
 
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
+import Foreign.Object as Object
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
 import Network.Wai.Internal (FilePath, Request(..), RequestBodyLength(..), Response(..))
-import Node.Stream as Stream
 import Node.Net.Socket as Net
-import URI.Extra.QueryPairs (QueryPairs(..))
-import URI.Path (Path(..))
+import Node.Stream as Stream
 
 type Application = Request -> (Response -> Effect Unit) -> Effect Unit
 
@@ -24,18 +23,17 @@ defaultRequest =
             , rawQueryString: mempty
             , requestHeaders: []
             , isSecure: false
-            , remoteHost: Nothing
-            , pathInfo: Path []
-            , queryString: QueryPairs []
+            , remoteHost: ""
+            , pathInfo: []
+            , queryString: Object.empty
             , body: pure Nothing
             , bodyLength: KnownLength 0
-            , headerHost: Nothing
+            , headerHost: "Nothing"
             , headerRange: Nothing
             , headerReferer: Nothing
             , headerUserAgent: Nothing
             , rawHeader: Nothing
             , nodeRequest: Nothing 
-            , socket: Nothing  
             }
 
 -- | Creating 'Response' from 'L.ByteString'. This is a wrapper for
