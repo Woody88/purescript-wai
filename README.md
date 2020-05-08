@@ -11,20 +11,20 @@ You can install this package by adding it to your packages.dhall:
 
 ```dhall
 let additions =
-  { purescript-warp =
-       { dependencies =
-          [ "http-types"
-          , "node-buffer"
-          , "node-http"
-          , "node-net"
-          , "node-streams"
-          , "node-url"
-          ]
-       , repo =
-           "https://github.com/Woody88/purescript-wai.git"
-       , version =
-           "master"
-       }
+  { wai =
+      { dependencies =
+        [ "http-types"
+        , "node-buffer"
+        , "node-http"
+        , "node-net"
+        , "node-streams"
+        , "node-url"
+        ]
+      , repo =
+          "https://github.com/Woody88/purescript-wai.git"
+      , version =
+          "master"
+      }
   }
 ```
 
