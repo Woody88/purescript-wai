@@ -37,7 +37,7 @@ newtype Request
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders Duplex
               | ResponseSocket (Socket -> Effect Unit) 
-              | ResponseFile   H.Status H.ResponseHeaders String
+              | ResponseFile   H.Status H.ResponseHeaders String (Maybe FilePart)
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
 

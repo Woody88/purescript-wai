@@ -9,14 +9,14 @@ module Network.Wai
     , responseSocket
     ) where 
 
-import Prelude 
+import Prelude
 
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Foreign.Object as Object
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
-import Network.Wai.Internal (FilePath, Request(..), RequestBodyLength(..), Response(..))
+import Network.Wai.Internal (FilePart(..), FilePath, Request(..), RequestBodyLength(..), Response(..))
 import Node.Net.Socket as Net
 import Node.Stream as Stream
 
@@ -55,7 +55,7 @@ responseStr :: Status -> ResponseHeaders -> String -> Response
 responseStr = ResponseString 
 
 -- | Creating 'Response' from a file.
-responseFile :: Status -> ResponseHeaders -> FilePath -> Response 
+responseFile :: Status -> ResponseHeaders -> FilePath -> Maybe FilePart -> Response 
 responseFile = ResponseFile 
 
 -- | Creating 'Response' from a duplex stream 
