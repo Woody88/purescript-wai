@@ -1,4 +1,13 @@
-module Network.Wai where 
+module Network.Wai 
+    ( Application 
+    , Middleware (..)
+    , module Network.Wai.Internal
+    , defaultRequest
+    , responseFile
+    , responseStr
+    , responseStream
+    , responseSocket
+    ) where 
 
 import Prelude 
 
@@ -15,6 +24,11 @@ type Application = Request -> (Response -> Effect Unit) -> Effect Unit
 
 type Middleware = Application -> Application
 
+-- TO-CONSIDER:
+-- Need to expose the node Response in a case where 
+-- we need to process something that requires HttpIncomingRequest 
+-- from http lib. However, It would be preferrable to have that handle be polymorphic
+-- in a situation where we would like to support http2. Maybe existential type can help us here?
 defaultRequest :: Request
 defaultRequest = 
     Request { method: H.GET
@@ -36,8 +50,7 @@ defaultRequest =
             , nodeRequest: Nothing 
             }
 
--- | Creating 'Response' from 'L.ByteString'. This is a wrapper for
---   'responseBuilder'. 
+-- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response
 responseStr = ResponseString 
 
@@ -45,9 +58,10 @@ responseStr = ResponseString
 responseFile :: Status -> ResponseHeaders -> FilePath -> Response 
 responseFile = ResponseFile 
 
--- | Creating 'Response' from a readable stream 
+-- | Creating 'Response' from a duplex stream 
 responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
 responseStream = ResponseStream
 
+-- | Creating 'Response' from a socket
 responseSocket :: (Net.Socket -> Effect Unit) -> Response 
 responseSocket = ResponseSocket

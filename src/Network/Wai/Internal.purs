@@ -40,3 +40,8 @@ data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseFile   H.Status H.ResponseHeaders String
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
+
+newtype FilePart = FilePart { offset    :: Int
+                            , byteCount :: Int 
+                            , fileSize   :: Int
+                            }
