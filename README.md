@@ -27,7 +27,6 @@ let additions =
       }
   }
 ```
-
 ```console
 user@user:~$ spago install wai
 ```
