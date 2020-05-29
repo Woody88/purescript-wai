@@ -7,6 +7,8 @@ module Network.Wai
     , responseStr
     , responseStream
     , responseSocket
+    , mkNodeRequest
+    , unNodeRequest
     ) where 
 
 import Prelude
@@ -16,7 +18,8 @@ import Effect (Effect)
 import Foreign.Object as Object
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
-import Network.Wai.Internal (FilePart(..), FilePath, Request(..), RequestBodyLength(..), Response(..))
+import Network.Wai.Internal (class NodeRequestInternal, FilePart(..), FilePath, NodeRequest(..), Request(..), RequestBodyLength(..), Response(..))
+import Node.HTTP as HTTP
 import Node.Net.Socket as Net
 import Node.Stream as Stream
 
@@ -47,8 +50,14 @@ defaultRequest =
             , headerReferer: Nothing
             , headerUserAgent: Nothing
             , rawHeader: Nothing
-            , nodeRequest: Nothing 
+            , nodeRequest: Nothing
             }
+
+mkNodeRequest :: forall a. NodeRequestInternal a => a -> NodeRequest
+mkNodeRequest a = NodeRequest \f -> f a
+
+unNodeRequest :: forall r. (forall a. NodeRequestInternal a => a -> r) -> NodeRequest -> r
+unNodeRequest a (NodeRequest f) = f a
 
 -- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response

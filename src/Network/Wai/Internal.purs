@@ -31,13 +31,22 @@ newtype Request
               , headerReferer   :: Maybe String 
               , headerUserAgent :: Maybe String
               , rawHeader       :: Maybe Buffer
-              , nodeRequest     :: Maybe HTTP.Request
+              , nodeRequest     :: Maybe NodeRequest
               }
+
+-- | A type that hides the internal node request object
+-- | because you should not access it unless you know what you are doing.
+newtype NodeRequest = NodeRequest (forall r. (forall a. NodeRequestInternal a => a -> r) -> r) 
+
+class NodeRequestInternal reqType 
+
+instance nodeRequestInternalHttp :: NodeRequestInternal HTTP.Request 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders Duplex
               | ResponseSocket (Socket -> Effect Unit) 
               | ResponseFile   H.Status H.ResponseHeaders String (Maybe FilePart)
+              | ResponseRaw (Effect Buffer -> (Effect Buffer -> Effect Unit) -> Effect Unit) Response
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
 
