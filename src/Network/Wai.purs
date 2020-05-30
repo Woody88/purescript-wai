@@ -7,21 +7,22 @@ module Network.Wai
     , responseStr
     , responseStream
     , responseSocket
-    , mkNodeRequest
-    , unNodeRequest
+    , nodeHttpRequest
     ) where 
 
 import Prelude
 
 import Data.Maybe (Maybe(..))
+import Data.Newtype (unwrap)
 import Effect (Effect)
 import Foreign.Object as Object
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
-import Network.Wai.Internal (class NodeRequestInternal, FilePart(..), FilePath, NodeRequest(..), Request(..), RequestBodyLength(..), Response(..))
+import Network.Wai.Internal (FilePart(..), FilePath, Request(..), RequestBodyLength(..), Response(..))
 import Node.HTTP as HTTP
 import Node.Net.Socket as Net
 import Node.Stream as Stream
+import Unsafe.Coerce (unsafeCoerce)
 
 type Application = Request -> (Response -> Effect Unit) -> Effect Unit
 
@@ -36,7 +37,7 @@ defaultRequest :: Request
 defaultRequest = 
     Request { method: H.GET
             , rawPathInfo: mempty
-            , httpVersion: H.http10
+            , httpVersion: H.http11
             , rawQueryString: mempty
             , requestHeaders: []
             , isSecure: false
@@ -53,11 +54,10 @@ defaultRequest =
             , nodeRequest: Nothing
             }
 
-mkNodeRequest :: forall a. NodeRequestInternal a => a -> NodeRequest
-mkNodeRequest a = NodeRequest \f -> f a
-
-unNodeRequest :: forall r. (forall a. NodeRequestInternal a => a -> r) -> NodeRequest -> r
-unNodeRequest a (NodeRequest f) = f a
+nodeHttpRequest :: Request -> Maybe HTTP.Request 
+nodeHttpRequest req 
+    | (unwrap req).httpVersion == H.http11 || (unwrap req).httpVersion == H.http10 = unsafeCoerce <$> (unwrap req).nodeRequest
+    | otherwise = Nothing 
 
 -- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response

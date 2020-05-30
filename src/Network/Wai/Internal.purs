@@ -3,16 +3,18 @@ module Network.Wai.Internal where
 import Prelude
 
 import Data.Maybe (Maybe)
+import Data.Newtype (class Newtype)
 import Effect (Effect)
 import Effect.Aff (Aff)
+import Foreign (Foreign)
 import Foreign.Object (Object)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
-import Node.HTTP as HTTP
 import Node.Net.Socket (Socket)
 import Node.Stream (Duplex)
 
 type FilePath = String 
+type NodeRequest = Foreign
 
 newtype Request 
     = Request { method          :: H.Method 
@@ -31,16 +33,10 @@ newtype Request
               , headerReferer   :: Maybe String 
               , headerUserAgent :: Maybe String
               , rawHeader       :: Maybe Buffer
-              , nodeRequest     :: Maybe NodeRequest
+              , nodeRequest     :: Maybe NodeRequest -- node request internal object
               }
 
--- | A type that hides the internal node request object
--- | because you should not access it unless you know what you are doing.
-newtype NodeRequest = NodeRequest (forall r. (forall a. NodeRequestInternal a => a -> r) -> r) 
-
-class NodeRequestInternal reqType 
-
-instance nodeRequestInternalHttp :: NodeRequestInternal HTTP.Request 
+derive instance newtypeRequest :: Newtype Request _ 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders Duplex
