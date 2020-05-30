@@ -25,6 +25,20 @@ let additions =
       , version =
           "master"
       }
+  , http-types =
+      { dependencies =
+          [ "console"
+          , "effect"
+          , "psci-support"
+          , "tuples"
+          , "unicode"
+          , "uri"
+          ]
+      , repo =
+          "https://github.com/Woody88/purescript-http-types.git"
+      , version =
+          "master"
+      }
   }
 ```
 ```console
