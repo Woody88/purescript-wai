@@ -125,7 +125,19 @@ let overrides = {=}
 
 let additions = 
     { 
-        http-types = ../purescript-http-types/spago.dhall as Location 
+        http-types = 
+            { dependencies =
+                [ "console"
+                , "effect"
+                , "psci-support"
+                , "tuples"
+                , "unicode"
+                , "uri"
+                ]
+            , repo =
+                "https://github.com/Woody88/purescript-http-types.git"
+            , version =
+                "master"
+            }
     }
-
 in  upstream // overrides // additions
