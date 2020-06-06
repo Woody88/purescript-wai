@@ -2,6 +2,7 @@ module Network.Wai.Internal where
 
 import Prelude
 
+import Data.List.Lazy as Lzy
 import Data.Maybe (Maybe)
 import Data.Newtype (class Newtype)
 import Effect (Effect)
@@ -16,27 +17,38 @@ import Node.Stream (Duplex)
 type FilePath = String 
 type NodeRequest = Foreign
 
-newtype Request 
-    = Request { method          :: H.Method 
-              , rawPathInfo     :: String
-              , httpVersion     :: H.HttpVersion
-              , rawQueryString  :: String
-              , requestHeaders  :: H.RequestHeaders
-              , isSecure        :: Boolean
-              , remoteHost      :: String 
-              , pathInfo        :: Array String 
-              , queryString     :: Object String 
-              , body            :: Aff (Maybe Buffer)
-              , bodyLength      :: RequestBodyLength
-              , headerHost      :: String 
-              , headerRange     :: Maybe String 
-              , headerReferer   :: Maybe String 
-              , headerUserAgent :: Maybe String
-              , rawHeader       :: Maybe Buffer
-              , nodeRequest     :: Maybe NodeRequest -- node request internal object
-              }
+data Request ctx = Request { | BaseContext ctx }
 
-derive instance newtypeRequest :: Newtype Request _ 
+type BaseContext ctx = 
+    ( url           :: String 
+    , contentLength :: RequestBodyLength
+    , method        :: H.Method 
+    , headers       :: H.RequestHeaders
+    , body          :: Maybe (Lzy.List Buffer)
+    | ctx
+    ) 
+
+-- newtype Request 
+--     = Request { method          :: H.Method 
+--               , rawPathInfo     :: String
+--               , httpVersion     :: H.HttpVersion
+--               , rawQueryString  :: String
+--               , requestHeaders  :: H.RequestHeaders
+--               , isSecure        :: Boolean
+--               , remoteHost      :: String 
+--               , pathInfo        :: Array String 
+--               , queryString     :: Object String 
+--               , body            :: Aff (Maybe Buffer)
+--               , bodyLength      :: RequestBodyLength
+--               , headerHost      :: String 
+--               , headerRange     :: Maybe String 
+--               , headerReferer   :: Maybe String 
+--               , headerUserAgent :: Maybe String
+--               , rawHeader       :: Maybe Buffer
+--               , nodeRequest     :: Maybe NodeRequest -- node request internal object
+--               }
+
+-- derive instance newtypeRequest :: Newtype Request _ 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders Duplex
