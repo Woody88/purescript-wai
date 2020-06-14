@@ -1,56 +1,40 @@
 module Network.Wai 
     ( Application 
     , Middleware (..)
-    , module Network.Wai.Internal
-    -- , defaultRequest
+    , module Network.Wai.Types
+    , request
+    , getRequest
     , responseFile
     , responseStr
     , responseStream
     , responseSocket
-    -- , nodeHttpRequest
+    , responseRaw
     ) where 
 
 import Prelude
 
-import Data.Maybe (Maybe(..))
-import Data.Newtype (unwrap)
+import Data.Maybe (Maybe)
 import Effect (Effect)
-import Effect.Class (class MonadEffect)
-import Foreign.Object as Object
+import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
-import Network.HTTP.Types as H
-import Network.Wai.Internal (FilePart(..), FilePath, Request(..), RequestBodyLength(..), Response(..), BaseContext)
-import Node.HTTP as HTTP
+import Network.Wai.Types (FilePart(..), Request(..), RequestBodyLength(..), Response(..), BaseContext)
+import Node.Buffer (Buffer)
 import Node.Net.Socket as Net
+import Node.Path (FilePath)
 import Node.Stream as Stream
-import Unsafe.Coerce (unsafeCoerce)
+import Record.Builder (Builder)
+import Record.Builder as Record
+import Type.Row (type (+))
 
--- | The reason for using MonadEffect as a contraint is to 
--- | have the user control how they want their logic to run sequential/parallel. 
--- | This approach forces the user to use function such as `launchAff` in order to have their logic 
--- | run in parallel 
-type Application m = forall req. MonadEffect m => Request req -> (Response -> m Unit) -> m Unit
+type Application ctx =  Request {} { | BaseContext + ctx} -> (Response -> Aff Unit) -> Aff Unit
 
-type Middleware m = Application m -> Application m
+type Middleware ctx' ctx = Application ctx' -> Application ctx
 
--- | TO-CONSIDER:
--- | Need to expose the node Response in a case where 
--- | we need to process something that requires HttpIncomingRequest 
--- | from http lib. However, It would be preferrable to have that handle be polymorphic
--- | in a situation where we would like to support http2. Maybe existential type can help us here?
--- defaultRequest :: Request ()
--- defaultRequest = 
---     Request { method: H.GET
---             , url: mempty
---             , headers: mempty 
---             , contentLength: KnownLength 0
---             , body: Nothing 
---             }
+request :: forall from ctx. Builder from ctx -> Request from ctx
+request = Request
 
--- nodeHttpRequest :: Request -> Maybe HTTP.Request 
--- nodeHttpRequest req 
---     | (unwrap req).httpVersion == H.http11 || (unwrap req).httpVersion == H.http10 = unsafeCoerce <$> (unwrap req).nodeRequest
---     | otherwise = Nothing 
+getRequest :: forall ctx. Request {} { | ctx } -> { | ctx}
+getRequest (Request b) = Record.build b {}
 
 -- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response
@@ -61,9 +45,17 @@ responseFile :: Status -> ResponseHeaders -> FilePath -> Maybe FilePart -> Respo
 responseFile = ResponseFile 
 
 -- | Creating 'Response' from a duplex stream 
-responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
+responseStream :: Status -> ResponseHeaders -> Stream.Readable () -> Response 
 responseStream = ResponseStream
 
 -- | Creating 'Response' from a socket
+-- | Lowest form of response, user must handle sending headers and status themselves
 responseSocket :: (Net.Socket -> Effect Unit) -> Response 
 responseSocket = ResponseSocket
+
+-- | Create a response for a raw application. 
+-- | This represents a stream as a function and accepts a Response as a backup in case of failure
+-- | The first parameter `Effect Buffer` is the receive handler of the stream
+-- | The second parameter `(Effect Buffer -> Effect Unit)` is the sending handler of the stream
+responseRaw :: (Effect Buffer -> (Effect Buffer -> Effect Unit) -> Effect Unit) -> Response -> Response 
+responseRaw = ResponseRaw
