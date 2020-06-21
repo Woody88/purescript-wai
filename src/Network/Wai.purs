@@ -14,13 +14,14 @@ import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
-import Network.Wai.Internal (class WaiRequest, FilePart(..), FilePath, RequestBodyLength(..), Response(..))
+import Network.Wai.Internal (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..))
 import Node.Net.Socket as Net
-import Node.Stream as Stream
+import Node.Path (FilePath)
+import Node.Stream (Readable)
 
-type Application req res = WaiRequest req => req -> (res -> Aff Unit) -> Aff Unit
+type Application = forall req. WaiRequest req => req -> (Response -> Aff Unit) -> Aff Unit
 
-type Middleware req res = Application req res -> Application req res
+type Middleware = Application -> Application
 
 -- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response
@@ -31,7 +32,7 @@ responseFile :: Status -> ResponseHeaders -> FilePath -> Maybe FilePart -> Respo
 responseFile = ResponseFile 
 
 -- | Creating 'Response' from a duplex stream 
-responseStream :: Status -> ResponseHeaders -> Stream.Duplex -> Response 
+responseStream :: Status -> ResponseHeaders -> Readable () -> Response 
 responseStream = ResponseStream
 
 -- | Creating 'Response' from a socket
