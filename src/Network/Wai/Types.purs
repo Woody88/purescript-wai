@@ -1,4 +1,20 @@
-module Network.Wai.Types where 
+module Network.Wai.Types 
+    (class WaiRequest
+    , FilePart(..)
+    , RequestBodyLength(..)
+    , Response(..)
+    , body
+    , contentLength
+    , headers
+    , host
+    , httpVersion
+    , method
+    , referer
+    , remoteHost
+    , url
+    , userAgent
+    )
+    where 
 
 import Prelude
 

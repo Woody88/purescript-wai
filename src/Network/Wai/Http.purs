@@ -1,5 +1,8 @@
-module Network.Wai.HttpRequest 
-  (HttpRequest(..)) 
+module Network.Wai.Http  
+  ( Application 
+  , Middleware
+  , HttpRequest(..)
+  ) 
   where
 
 import Prelude
@@ -13,13 +16,18 @@ import Data.Newtype (class Newtype, unwrap)
 import Data.String as String
 import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
+import Effect.Aff (Aff)
 import Foreign.Object as Object
 import Network.HTTP.Types (http09, http10, http11)
 import Network.HTTP.Types as Method
-import Network.Wai.Types (class WaiRequest, RequestBodyLength(..), contentLength, headers, host, httpVersion, method, referer, url)
+import Network.Wai.Types (class WaiRequest, RequestBodyLength(..), Response, contentLength, headers, host, httpVersion, method, referer, url)
 import Node.HTTP as HTTP
 import Node.Net.Socket as Socket
 import Unsafe.Coerce (unsafeCoerce)
+
+type Application = HttpRequest -> (Response -> Aff Unit) -> Aff Unit 
+
+type Middleware = Application -> Application
 
 newtype HttpRequest = HttpRequest HTTP.Request
 
