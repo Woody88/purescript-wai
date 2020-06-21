@@ -1,4 +1,6 @@
-module Network.Wai.HttpRequest where
+module Network.Wai.HttpRequest 
+  (HttpRequest(..)) 
+  where
 
 import Prelude
 
@@ -14,7 +16,7 @@ import Data.Tuple.Nested ((/\))
 import Foreign.Object as Object
 import Network.HTTP.Types (http09, http10, http11)
 import Network.HTTP.Types as Method
-import Network.Wai.Internal (class WaiRequest, RequestBodyLength(..), contentLength, headers, host, httpVersion, method, referer, url)
+import Network.Wai.Types (class WaiRequest, RequestBodyLength(..), contentLength, headers, host, httpVersion, method, referer, url)
 import Node.HTTP as HTTP
 import Node.Net.Socket as Socket
 import Unsafe.Coerce (unsafeCoerce)

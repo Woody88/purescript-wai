@@ -1,7 +1,8 @@
 module Network.Wai 
     ( Application 
     , Middleware (..)
-    , module Network.Wai.Internal
+    , module Network.Wai.Types
+    , module HttpRequest
     , responseFile
     , responseStr
     , responseStream
@@ -14,7 +15,8 @@ import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
-import Network.Wai.Internal (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..))
+import Network.Wai.HttpRequest (HttpRequest(..)) as HttpRequest
+import Network.Wai.Types (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..))
 import Node.Net.Socket as Net
 import Node.Path (FilePath)
 import Node.Stream (Readable)
