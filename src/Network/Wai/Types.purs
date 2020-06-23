@@ -20,6 +20,7 @@ import Prelude
 
 import Data.Maybe (Maybe)
 import Effect (Effect)
+import Effect.Aff (Aff)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
@@ -39,9 +40,9 @@ class WaiRequest hdl where
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
-              | ResponseSocket (Socket -> Effect Unit) 
+              | ResponseSocket (Socket -> Aff Unit) 
               | ResponseFile H.Status H.ResponseHeaders String (Maybe FilePart)
-              | ResponseRaw (Effect Buffer -> (Effect Buffer -> Effect Unit) -> Effect Unit) Response
+              | ResponseRaw (Aff Buffer -> (Aff Buffer -> Aff Unit) -> Aff Unit) Response
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
 
