@@ -7,13 +7,15 @@ module Network.Wai.Http
 
 import Prelude
 
+import Data.Bifunctor (lmap)
 import Data.Foldable (intercalate)
 import Data.Functor (mapFlipped)
 import Data.Int as Int
 import Data.Map as Map
 import Data.Maybe (fromMaybe, maybe)
-import Data.Newtype (class Newtype, unwrap)
+import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.String as String
+import Data.String.CaseInsensitive (CaseInsensitiveString)
 import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
 import Effect.Aff (Aff)
@@ -25,7 +27,7 @@ import Node.HTTP as HTTP
 import Node.Net.Socket as Socket
 import Unsafe.Coerce (unsafeCoerce)
 
-type Application = HttpRequest -> (Response -> Aff Unit) -> Aff Unit 
+type Application = HTTP.Request -> (Response -> Aff Unit) -> Aff Unit 
 
 type Middleware = Application -> Application
 
@@ -45,16 +47,16 @@ instance waiRequestHTTP :: WaiRequest HttpRequest where
 
     headers = httpHeaders
     body    = unsafeCoerce <<< unwrap
-    host    = fromMaybe mempty <<< Map.lookup "host" <<< Map.fromFoldable <<< httpHeaders
-    referer = Map.lookup "referer" <<< Map.fromFoldable <<< httpHeaders
-    userAgent = fromMaybe mempty <<< Map.lookup "user-agent" <<< Map.fromFoldable <<< httpHeaders
+    host    = fromMaybe mempty <<< Map.lookup (wrap "host") <<< Map.fromFoldable <<< httpHeaders
+    referer = Map.lookup (wrap "referer") <<< Map.fromFoldable <<< httpHeaders
+    userAgent = fromMaybe mempty <<< Map.lookup (wrap "user-agent") <<< Map.fromFoldable <<< httpHeaders
     remoteHost = remoteHost' <<< _.socket <<< unsafeCoerce <<< unwrap
         where 
             remoteHost' socket = do 
                 let mkHost mhost mport = (\host port -> String.joinWith ":" [host, show port]) <$> mhost <*> mport 
                 mkHost <$> Socket.remoteAddress socket  <*> Socket.remotePort socket 
 
-    contentLength = parseContentLength <<< Map.lookup "content-length" <<< Map.fromFoldable <<< httpHeaders
+    contentLength = parseContentLength <<< Map.lookup (wrap "content-length") <<< Map.fromFoldable <<< httpHeaders
       where 
           parseContentLength = 
               maybe ChunkedBody(KnownLength <<< fromMaybe 0 <<< Int.fromString) 
@@ -75,5 +77,5 @@ instance showHttpRequest :: Show HttpRequest where
         , "contentLength" /\ (show $ contentLength waireq)
         ]
 
-httpHeaders :: HttpRequest -> Array (Tuple String String) 
-httpHeaders = Object.toUnfoldable <<< _.headers <<< unsafeCoerce <<< unwrap
+httpHeaders :: HttpRequest -> Array (Tuple CaseInsensitiveString String) 
+httpHeaders = map (lmap wrap) <<< Object.toUnfoldable <<< _.headers <<< unsafeCoerce <<< unwrap
