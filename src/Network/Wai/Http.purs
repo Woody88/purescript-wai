@@ -27,7 +27,7 @@ import Node.HTTP as HTTP
 import Node.Net.Socket as Socket
 import Unsafe.Coerce (unsafeCoerce)
 
-type Application = HTTP.Request -> (Response -> Aff Unit) -> Aff Unit 
+type Application = HttpRequest -> (Response -> Aff Unit) -> Aff Unit 
 
 type Middleware = Application -> Application
 
