@@ -13,6 +13,7 @@ module Network.Wai.Types
     , remoteHost
     , url
     , userAgent
+    , isSecure
     )
     where 
 
@@ -37,6 +38,7 @@ class WaiRequest hdl where
     referer       :: hdl -> Maybe String 
     userAgent     :: hdl -> String 
     remoteHost    :: hdl -> Effect (Maybe String)
+    isSecure      :: hdl -> Boolean 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())

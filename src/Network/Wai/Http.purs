@@ -50,6 +50,7 @@ instance waiRequestHTTP :: WaiRequest HttpRequest where
     host    = fromMaybe mempty <<< Map.lookup (wrap "host") <<< Map.fromFoldable <<< httpHeaders
     referer = Map.lookup (wrap "referer") <<< Map.fromFoldable <<< httpHeaders
     userAgent = fromMaybe mempty <<< Map.lookup (wrap "user-agent") <<< Map.fromFoldable <<< httpHeaders
+    isSecure = const false
     remoteHost = remoteHost' <<< _.socket <<< unsafeCoerce <<< unwrap
         where 
             remoteHost' socket = do 
