@@ -40,7 +40,7 @@ class WaiRequest hdl where
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
-              | ResponseSocket (Socket -> Buffer -> Aff Unit)    -- ^ Raw request socket and the first packet of the tunneling stream
+              | ResponseSocket (Socket -> Maybe Buffer -> Aff Unit)    -- ^ Raw request socket and the first packet of the tunneling stream
               | ResponseFile H.Status H.ResponseHeaders String (Maybe FilePart)
               | ResponseRaw (Aff Buffer -> (Aff Buffer -> Aff Unit) -> Aff Unit) Response
 

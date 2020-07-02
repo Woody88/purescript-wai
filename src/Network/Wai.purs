@@ -31,5 +31,5 @@ responseStream :: Status -> ResponseHeaders -> Readable () -> Response
 responseStream = ResponseStream
 
 -- | Creating 'Response' from a socket
-responseSocket :: (Net.Socket -> Buffer -> Aff Unit) -> Response 
+responseSocket :: (Net.Socket -> Maybe Buffer -> Aff Unit) -> Response 
 responseSocket = ResponseSocket
