@@ -12,7 +12,7 @@ import Data.Maybe (Maybe)
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.Wai.Types (FilePart, Response(..))
-import Network.Wai.Types (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..), body, contentLength, headers, host, httpVersion, method, referer, remoteHost, url, userAgent) as WaiTypes
+import Network.Wai.Types (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..), body, isSecure, contentLength, headers, host, httpVersion, method, referer, remoteHost, url, userAgent) as WaiTypes
 import Node.Buffer (Buffer)
 import Node.Net.Socket as Net
 import Node.Path (FilePath)
