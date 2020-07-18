@@ -1,5 +1,7 @@
 module Network.Wai 
     ( module WaiTypes
+    , Application 
+    , Middleware
     , defaultRequest
     , responseFile
     , responseStr
@@ -19,6 +21,10 @@ import Node.Buffer (Buffer)
 import Node.Net.Socket as Net
 import Node.Path (FilePath)
 import Node.Stream (Readable)
+
+type Application = Request -> (Response -> Aff Unit) -> Aff Unit 
+
+type Middleware = Application -> Application 
 
 defaultRequest :: Request
 defaultRequest = Request
