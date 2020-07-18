@@ -9,6 +9,7 @@ module Network.Wai.Types
 import Prelude
 
 import Data.Maybe (Maybe)
+import Data.Newtype (class Newtype)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Foreign (Foreign)
@@ -31,6 +32,8 @@ newtype Request = Request
     , isSecure      :: Boolean 
     , handle        :: Maybe Foreign  -- ^ This should represent your actual request handle if you have any, i.e: HTTP.Request or HTTP2.Request
     }
+
+derive instance newtypeRequest :: Newtype Request _ 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
