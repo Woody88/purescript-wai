@@ -1,19 +1,8 @@
 module Network.Wai.Types 
-    (class WaiRequest
+    ( Request (..)
     , FilePart(..)
     , RequestBodyLength(..)
     , Response(..)
-    , body
-    , contentLength
-    , headers
-    , host
-    , httpVersion
-    , method
-    , referer
-    , remoteHost
-    , url
-    , userAgent
-    , isSecure
     )
     where 
 
@@ -22,23 +11,26 @@ import Prelude
 import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
+import Foreign (Foreign)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
 import Node.Stream (Readable)
 
-class WaiRequest hdl where 
-    url           :: hdl -> String 
-    method        :: hdl -> H.Method 
-    httpVersion   :: hdl -> H.HttpVersion  
-    headers       :: hdl -> H.RequestHeaders
-    body          :: hdl -> Readable ()
-    contentLength :: hdl -> RequestBodyLength
-    host          :: hdl -> String 
-    referer       :: hdl -> Maybe String 
-    userAgent     :: hdl -> String 
-    remoteHost    :: hdl -> Effect (Maybe String)
-    isSecure      :: hdl -> Boolean 
+newtype Request = Request 
+    { url           :: String 
+    , method        :: H.Method 
+    , httpVersion   :: H.HttpVersion  
+    , headers       :: H.RequestHeaders
+    , body          :: Maybe (Readable ())
+    , contentLength :: RequestBodyLength
+    , host          :: String 
+    , referer       :: Maybe String 
+    , userAgent     :: String 
+    , remoteHost    :: Effect (Maybe String)
+    , isSecure      :: Boolean 
+    , handle        :: Maybe Foreign  -- ^ This should represent your actual request handle if you have any, i.e: HTTP.Request or HTTP2.Request
+    }
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
