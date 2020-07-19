@@ -1,5 +1,5 @@
 module Network.Wai.Types 
-    (class WaiRequest
+    ( class WaiRequest
     , FilePart(..)
     , RequestBodyLength(..)
     , Response(..)
