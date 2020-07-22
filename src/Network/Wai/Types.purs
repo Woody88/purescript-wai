@@ -1,8 +1,20 @@
 module Network.Wai.Types 
-    ( Request (..)
+    ( class WaiRequest
     , FilePart(..)
     , RequestBodyLength(..)
     , Response(..)
+    , body
+    , contentLength
+    , headers
+    , host
+    , httpVersion
+    , method
+    , referer
+    , remoteHost
+    , url
+    , userAgent
+    , isSecure
+    , reqHandle
     )
     where 
 
@@ -18,22 +30,19 @@ import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
 import Node.Stream (Readable)
 
-newtype Request = Request 
-    { url           :: String 
-    , method        :: H.Method 
-    , httpVersion   :: H.HttpVersion  
-    , headers       :: H.RequestHeaders
-    , body          :: Maybe (Readable ())
-    , contentLength :: RequestBodyLength
-    , host          :: String 
-    , referer       :: Maybe String 
-    , userAgent     :: String 
-    , remoteHost    :: Effect (Maybe String)
-    , isSecure      :: Boolean 
-    , handle        :: Maybe Foreign  -- ^ This should represent your actual request handle if you have any, i.e: HTTP.Request or HTTP2.Request
-    }
-
-derive instance newtypeRequest :: Newtype Request _ 
+class WaiRequest hdl where 
+    url           :: hdl -> String 
+    method        :: hdl -> H.Method 
+    httpVersion   :: hdl -> H.HttpVersion  
+    headers       :: hdl -> H.RequestHeaders
+    body          :: hdl -> Readable ()
+    contentLength :: hdl -> RequestBodyLength
+    host          :: hdl -> String 
+    referer       :: hdl -> Maybe String 
+    userAgent     :: hdl -> String 
+    remoteHost    :: hdl -> Effect (Maybe String)
+    isSecure      :: hdl -> Boolean 
+    reqHandle     :: hdl -> Maybe Foreign 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())

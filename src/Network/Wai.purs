@@ -1,8 +1,7 @@
 module Network.Wai 
     ( module WaiTypes
-    , Application 
+    , Application
     , Middleware
-    , defaultRequest
     , responseFile
     , responseStr
     , responseStream
@@ -11,36 +10,18 @@ module Network.Wai
 
 import Prelude
 
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe)
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
-import Network.HTTP.Types as H
-import Network.Wai.Types (Request(..), FilePart(..), RequestBodyLength(..), Response(..)) as WaiTypes
-import Network.Wai.Types (Request(..), FilePart, RequestBodyLength(..), Response(..))
+import Network.Wai.Types (class WaiRequest, FilePart(..), RequestBodyLength(..), Response(..), body, isSecure, contentLength, headers, host, httpVersion, method, referer, remoteHost, url, userAgent) as WaiTypes
+import Network.Wai.Types (class WaiRequest, FilePart, Response(..))
 import Node.Buffer (Buffer)
 import Node.Net.Socket as Net
 import Node.Path (FilePath)
 import Node.Stream (Readable)
 
-type Application = Request -> (Response -> Aff Unit) -> Aff Unit 
-
+type Application = forall req. WaiRequest req => req -> (Response -> Aff Unit) -> Aff Unit
 type Middleware = Application -> Application 
-
-defaultRequest :: Request
-defaultRequest = Request
-    { url: mempty 
-    , method: H.GET
-    , httpVersion: H.http11 
-    , headers: mempty 
-    , body: Nothing
-    , contentLength: KnownLength 0
-    , host: mempty 
-    , referer: Nothing 
-    , userAgent: mempty  
-    , remoteHost: pure Nothing 
-    , isSecure: false 
-    , handle: Nothing 
-    }
 
 -- | Creating 'Response' from a string
 responseStr :: Status -> ResponseHeaders -> String -> Response
