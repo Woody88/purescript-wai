@@ -14,6 +14,7 @@ module Network.Wai.Types
     , url
     , userAgent
     , isSecure
+    , reqHandle
     )
     where 
 
@@ -22,6 +23,7 @@ import Prelude
 import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
+import Foreign (Foreign)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
@@ -39,6 +41,7 @@ class WaiRequest hdl where
     userAgent     :: hdl -> String 
     remoteHost    :: hdl -> Effect (Maybe String)
     isSecure      :: hdl -> Boolean 
+    reqHandle     :: hdl -> Maybe Foreign 
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
