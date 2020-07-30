@@ -1,20 +1,8 @@
 module Network.Wai.Types 
-    ( class WaiRequest
+    ( Request(..)
     , FilePart(..)
     , RequestBodyLength(..)
     , Response(..)
-    , body
-    , contentLength
-    , headers
-    , host
-    , httpVersion
-    , method
-    , referer
-    , remoteHost
-    , url
-    , userAgent
-    , isSecure
-    , reqHandle
     )
     where 
 
@@ -22,7 +10,6 @@ import Prelude
 
 import Data.Maybe (Maybe)
 import Data.Newtype (class Newtype)
-import Effect (Effect)
 import Effect.Aff (Aff)
 import Foreign (Foreign)
 import Network.HTTP.Types as H
@@ -30,19 +17,23 @@ import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
 import Node.Stream (Readable)
 
-class WaiRequest hdl where 
-    url           :: hdl -> String 
-    method        :: hdl -> H.Method 
-    httpVersion   :: hdl -> H.HttpVersion  
-    headers       :: hdl -> H.RequestHeaders
-    body          :: hdl -> Readable ()
-    contentLength :: hdl -> RequestBodyLength
-    host          :: hdl -> String 
-    referer       :: hdl -> Maybe String 
-    userAgent     :: hdl -> String 
-    remoteHost    :: hdl -> Effect (Maybe String)
-    isSecure      :: hdl -> Boolean 
-    reqHandle     :: hdl -> Maybe Foreign 
+newtype Request = Request 
+    { url           :: String 
+    , method        :: H.Method 
+    , httpVersion   :: H.HttpVersion  
+    , headers       :: H.RequestHeaders
+    , body          :: Maybe (Readable ())
+    , contentLength :: RequestBodyLength
+    , host          :: Maybe String 
+    , referer       :: Maybe String 
+    , userAgent     :: Maybe String 
+    , remoteHost    :: Maybe String
+    , range         :: Maybe String
+    , isSecure      :: Boolean 
+    , reqHandle     :: Maybe Foreign 
+    }
+
+derive instance newtypeRequest :: Newtype Request _
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
