@@ -19,7 +19,7 @@ import Node.Stream (Readable)
 
 newtype Request = Request 
     { url           :: String 
-    , method        :: H.Method 
+    , method        :: H.StdMethod
     , httpVersion   :: H.HttpVersion  
     , headers       :: H.RequestHeaders
     , body          :: Maybe (Readable ())
