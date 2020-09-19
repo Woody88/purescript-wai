@@ -3,6 +3,7 @@ module Network.Wai
     , Application
     , Middleware
     , defaultRequest
+    , pathInfo
     , responseFile
     , responseStr
     , responseStream
@@ -11,7 +12,11 @@ module Network.Wai
 
 import Prelude
 
-import Data.Maybe (Maybe(..))
+import Data.Array as Array
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Newtype (unwrap)
+import Data.String (Pattern(..))
+import Data.String as String
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
@@ -56,3 +61,20 @@ responseStream = ResponseStream
 -- | Creating 'Response' from a socket
 responseSocket :: (Net.Socket -> Maybe Buffer -> Aff Unit) -> Response 
 responseSocket = ResponseSocket
+
+-- | will return the request url as an array of string
+-- | root will return an empty array
+-- |
+-- | > req = Wai.defaulRequest { url = "/hello/world" } :: Request
+-- | > pathInfo req 
+-- | ["hello", "world"] 
+-- | 
+-- | > req = Wai.defaulRequest { url = "/" } :: Request
+-- | > pathInfo req 
+-- | [] 
+pathInfo :: Request -> Array String 
+pathInfo = unwrap >>> _.url >>> split "?" >>> first >>> split "/" >>> nonempty 
+  where
+    nonempty = Array.filter ((/=) "")
+    split = Pattern >>> String.split
+    first = Array.head >>> fromMaybe ""
