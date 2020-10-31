@@ -3,6 +3,7 @@ module Network.Wai
     , Application
     , Middleware
     , defaultRequest
+    , queryInfo
     , pathInfo
     , responseFile
     , responseStr
@@ -17,6 +18,7 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Newtype (unwrap)
 import Data.String (Pattern(..))
 import Data.String as String
+import Data.Tuple (Tuple(..))
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
@@ -78,3 +80,20 @@ pathInfo = unwrap >>> _.url >>> split "?" >>> first >>> split "/" >>> nonempty
     nonempty = Array.filter ((/=) "")
     split = Pattern >>> String.split
     first = Array.head >>> fromMaybe ""
+
+queryInfo :: Request -> Array (Tuple String String)
+queryInfo (Request {url: ""}) = []
+queryInfo (Request req) = case split "?" req.url of 
+  [_, ""] -> []
+  [_, qstr] -> parseQueryString qstr
+  otherwise -> []
+  where 
+    parseQueryString = map (splitAt (flip Tuple "") "=") <<< String.split (Pattern "&")
+    second = case _ of 
+            [_ , qstr] ->  qstr
+            _         -> ""
+    split = Pattern >>> String.split
+    splitAt k p str =
+        case String.indexOf (Pattern p) str of
+          Just i -> Tuple (String.take i str) (String.drop (i + String.length p) str)
+          Nothing -> k str
