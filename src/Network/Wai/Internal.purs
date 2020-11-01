@@ -1,4 +1,4 @@
-module Network.Wai.Types 
+module Network.Wai.Internal 
     ( Request(..)
     , FilePart(..)
     , RequestBodyLength(..)
@@ -20,6 +20,8 @@ import Node.Stream (Readable)
 newtype Request = Request 
     { url           :: String 
     , method        :: H.StdMethod
+    , pathInfo      :: Array String 
+    , queryString   :: H.Query    
     , httpVersion   :: H.HttpVersion  
     , headers       :: H.RequestHeaders
     , body          :: Maybe (Readable ())
