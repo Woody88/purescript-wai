@@ -4,16 +4,11 @@ You can edit this file as you like.
 -}
 { name = "purescript-wai"
 , dependencies =
-  [ "console"
-  , "effect"
+  [ "effect"
+  , "aff"
   , "http-types"
-  , "node-buffer"
-  , "node-http"
   , "node-net"
-  , "node-streams"
-  , "node-url"
-  , "psci-support"
   ]
 , packages = ./packages.dhall
-, sources = [ "src/**/*.purs", "test/**/*.purs" ]
+, sources = [ "src/**/*.purs" ]
 }

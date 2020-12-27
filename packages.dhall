@@ -116,28 +116,17 @@ let additions =
   }
 -------------------------------
 -}
-
-
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.13.5-20191215/packages.dhall sha256:fdc5d54cd54213000100fbc13c90dce01668a73fe528d8662430558df3411bee
+      https://github.com/purescript/package-sets/releases/download/psc-0.13.8-20201223/packages.dhall sha256:a1a8b096175f841c4fef64c9b605fb0d691229241fd2233f6cf46e213de8a185
 
 let overrides = {=}
 
-let additions = 
-    { 
-        http-types = 
-            { dependencies =
-                [ "console"
-                , "effect"
-                , "psci-support"
-                , "tuples"
-                , "unicode"
-                , "uri"
-                ]
-            , repo =
-                "https://github.com/Woody88/purescript-http-types.git"
-            , version =
-                "master"
-            }
-    }
+let additions =
+      { http-types =
+        { dependencies = [ "tuples", "unicode", "generics-rep" ]
+        , repo = "https://github.com/Woody88/purescript-http-types.git"
+        , version = "master"
+        }
+      }
+
 in  upstream // overrides // additions
