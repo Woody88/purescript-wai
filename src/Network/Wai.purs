@@ -12,6 +12,7 @@ module Network.Wai
 import Prelude
 
 import Data.Maybe (Maybe(..))
+import Data.Vault as Vault
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
@@ -40,7 +41,7 @@ defaultRequest = Request
     , remoteHost: Nothing
     , range: Nothing
     , isSecure: false
-    , reqHandle: Nothing
+    , vault: Vault.empty
     }
 
 -- | Creating 'Response' from a string

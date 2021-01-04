@@ -11,11 +11,11 @@ import Prelude
 import Data.Maybe (Maybe)
 import Data.Newtype (class Newtype)
 import Effect.Aff (Aff)
-import Foreign (Foreign)
 import Network.HTTP.Types as H
 import Node.Buffer (Buffer)
 import Node.Net.Socket (Socket)
 import Node.Stream (Readable)
+import Data.Vault (Vault)
 
 newtype Request = Request 
     { url           :: String 
@@ -32,7 +32,8 @@ newtype Request = Request
     , remoteHost    :: Maybe String
     , range         :: Maybe String
     , isSecure      :: Boolean 
-    , reqHandle     :: Maybe Foreign 
+    -- | A location for arbitrary data to be shared by applications and middleware.
+    , vault         :: Vault 
     }
 
 derive instance newtypeRequest :: Newtype Request _
