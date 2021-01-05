@@ -3,6 +3,7 @@ module Network.Wai.Internal
     , FilePart(..)
     , RequestBodyLength(..)
     , Response(..)
+    , ResponseReceived
     )
     where 
 

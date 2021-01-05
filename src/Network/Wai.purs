@@ -7,6 +7,8 @@ module Network.Wai
     , responseStr
     , responseStream
     , responseSocket
+    , modifyResponse
+    , ifRequest
     ) where 
 
 import Prelude
@@ -59,3 +61,13 @@ responseStream = ResponseStream
 -- | Creating 'Response' from a socket
 responseSocket :: (Net.Socket -> Maybe Buffer -> Aff Unit) -> Response 
 responseSocket = ResponseSocket
+
+-- | Apply/execute a function that modifies a response as a 'Middleware'
+modifyResponse :: (Response -> Response) -> Middleware
+modifyResponse f app req respond = app req $ respond <<< f
+
+-- | Conditionally apply/execute a 'Middleware'
+ifRequest :: (Request -> Boolean) -> Middleware -> Middleware
+ifRequest rpred middleware app req 
+    | rpred req = middleware app req
+    | otherwise = app req
