@@ -2,7 +2,6 @@
 
 A library that provides common protocol (types) for communication between web applications and web servers. 
 
-***This library is a port of the Haskell Wai library. The only difference is that this library pretty much wraps node's core http request classes.***
 ## Installation
 
 ***This library is not yet published to pursuit.***  
