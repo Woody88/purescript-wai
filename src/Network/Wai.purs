@@ -22,7 +22,7 @@ import Node.Net.Socket as Net
 import Node.Path (FilePath)
 import Node.Stream (Readable)
 
-type Application = Request -> (Response -> Aff Unit) -> Aff Unit
+type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 type Middleware = Application -> Application 
 
 defaultRequest :: Request 

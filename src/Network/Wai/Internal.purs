@@ -54,3 +54,7 @@ newtype FilePart = FilePart { offset    :: Int
                             , byteCount :: Int 
                             , fileSize   :: Int
                             }
+
+-- | A datatype to indicate that the WAI handler has received the
+-- response.
+data ResponseReceived = ResponseReceived
