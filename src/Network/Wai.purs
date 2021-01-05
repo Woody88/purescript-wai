@@ -16,7 +16,7 @@ import Data.Vault as Vault
 import Effect.Aff (Aff)
 import Network.HTTP.Types (Status, ResponseHeaders)
 import Network.HTTP.Types as H
-import Network.Wai.Internal (Request(..), FilePart, RequestBodyLength(..), Response(..))
+import Network.Wai.Internal (FilePart, Request(..), ResponseReceived, RequestBodyLength(..), Response(..))
 import Node.Buffer (Buffer)
 import Node.Net.Socket as Net
 import Node.Path (FilePath)
