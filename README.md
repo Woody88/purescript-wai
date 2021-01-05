@@ -5,7 +5,7 @@ A library that provides common protocol (types) for communication between web ap
 ## Installation
 
 ***This library is not yet published to pursuit.***  
-You can install this package by adding it to your packages.dhall:
+You can install this package by adding the details below to your packages.dhall:
 <details>  
 
 ```dhall
