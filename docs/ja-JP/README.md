@@ -91,7 +91,7 @@ myCustomMiddleware app req send
         validatTokenHeader req = ...
 ```
 
-ミドルウェアを関数として原型しているので、より多くのミドルウェアを互いに組み合わせることができます。
+ミドルウェアは関数なので、より多くのミドルウェアを互いに組み合わせることができます。
 
 ```purescript
 type Middleware = Application -> Application
@@ -106,4 +106,4 @@ myCustomMiddleware2 :: Middleware
 myCustomMiddleware app1 app2 = ...
 ```
 
-## WAIリクエスト `Vault` (建設中)
+## WAIリクエスト `Vault` (TODO)
