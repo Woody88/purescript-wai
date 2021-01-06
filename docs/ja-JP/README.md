@@ -28,12 +28,12 @@ Web Application Interface
   &nbsp;
 </p>
 
-A library that provides common protocol (types) for communication between web applications and web servers. 
+WebアプリケーションとWebサーバ間の通信のための共通プロトコル(型)を提供するライブラリです。
 
-## Installation
+## インストール
 
-***This library is not yet published to pursuit.***  
-You can install this package by adding the details below to your packages.dhall:
+***このライブラリはまだ公開されていません。 
+以下の詳細を packages.dhall に追加することで、本パッケージをインストールすることができます。
 <details>  
 
 ```dhall
@@ -65,33 +65,33 @@ user@user:~$ spago install wai
 </details>
 </br>
 
-## WAI `Application`
-WAI represents request/response flow, referred to as `Application`, as a simple [CPS](https://en.wikipedia.org/wiki/Continuation-passing_style) function. An `Application` will accept a request and a continuation function that asynchronously performs the response. If the continuation function successfully sends the response, a `ResponseReceived` value is returned. 
+## WAI `アプリケーション`
+WAIは`Application`と呼ばれるリクエスト/レスポンスの流れを単純な[CPS](https://ja.wikipedia.org/wiki/継続継続渡しスタイル)関数として表現する。`Application`はリクエストと継続関数を受け取ってから応答を非同期に実行します。継続関数が応答の送信に成功した場合は `ResponseReceived` という値を返す。
 
 ```purescript
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 ```
 
-## WAI `Middleware`
-By composing two `Application`s we can model a `Middleware`. This gives the ability to transform/inspect the request/response before it is delagated to the main `Application`. 
+## WAI `ミドルウェア`
+二つの `Application` を構成することで `Middleware` を原型することができます。これにより、リクエスト/レスポンスがメインの `Application` に渡す前に変換/検査することが得られます。
 
 ```purescript
 type Middleware = Application -> Application
 
--- Creating 'Response' from a string
--- This function is provided by this library. 
+-- Stringから 'Response' を作成します。
+-- この関数はこのライブラリで提供されています。
 responseStr :: Status -> ResponseHeaders -> String -> Response
 
 myCustomMiddleware :: Middleware 
 myCustomMiddleware app req send 
     | validatTokenHeader req = app req send 
-    | otherwise              = send $ responseStr badRequest400 [] "Invalid Token!"
+    | otherwise              = send $ responseStr badRequest400 [] "無効なトークン！"
     where 
         validatTokenHeader :: Request -> Boolean
         validatTokenHeader req = ...
 ```
 
-Because we are modelling the middleware as a function we can just compose more middleware onto one another — this means that we can control the order of the middlewares based on how we compose the functions.
+ミドルウェアを関数として原型しているので、より多くのミドルウェアを互いに組み合わせることができます。
 
 ```purescript
 type Middleware = Application -> Application
@@ -106,4 +106,4 @@ myCustomMiddleware2 :: Middleware
 myCustomMiddleware app1 app2 = ...
 ```
 
-## WAI Request `Vault` (Under Construction)
+## WAIリクエスト `Vault` (建設中)

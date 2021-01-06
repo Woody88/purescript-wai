@@ -28,12 +28,12 @@ Web Application Interface
   &nbsp;
 </p>
 
-A library that provides common protocol (types) for communication between web applications and web servers. 
+Une bibliothèque qui fournit des protocoles (types) communs pour la communication entre les applications web et les serveurs web. 
 
 ## Installation
 
-***This library is not yet published to pursuit.***  
-You can install this package by adding the details below to your packages.dhall:
+***Cette bibliothèque n'est pas encore publiée sur pursuit.***  
+Vous pouvez installer ce paquet en ajoutant les détails ci-dessous à votre packages.dhall :
 <details>  
 
 ```dhall
@@ -65,33 +65,33 @@ user@user:~$ spago install wai
 </details>
 </br>
 
-## WAI `Application`
-WAI represents request/response flow, referred to as `Application`, as a simple [CPS](https://en.wikipedia.org/wiki/Continuation-passing_style) function. An `Application` will accept a request and a continuation function that asynchronously performs the response. If the continuation function successfully sends the response, a `ResponseReceived` value is returned. 
+## WAI `Application`.
+WAI représente le flux de requête/réponse, appelé `Application`, en tant que simple fonction [CPS](https://en.wikipedia.org/wiki/Continuation-passing_style). Une `Application` accepte une requête et une fonction de continuation qui effectue la réponse de manière asynchrone. Si la fonction de continuation envoie avec succès la réponse, une valeur "ResponseReceived" est retourné. 
 
 ```purescript
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 ```
 
-## WAI `Middleware`
-By composing two `Application`s we can model a `Middleware`. This gives the ability to transform/inspect the request/response before it is delagated to the main `Application`. 
+## WAI `Middleware` (logiciel intermédiaire)
+En composant deux `Applications`, nous pouvons modéliser un `Middleware`. Cela permet de transformer/inspecter la requête/réponse avant qu'elle ne soit délocalisée vers l'`Application` principale. 
 
 ```purescript
 type Middleware = Application -> Application
 
--- Creating 'Response' from a string
--- This function is provided by this library. 
+-- Crée une "Response" à partir d'un String
+-- Cette fonction fait partie de cette bibliothèque. 
 responseStr :: Status -> ResponseHeaders -> String -> Response
 
 myCustomMiddleware :: Middleware 
 myCustomMiddleware app req send 
     | validatTokenHeader req = app req send 
-    | otherwise              = send $ responseStr badRequest400 [] "Invalid Token!"
+    | otherwise              = send $ responseStr badRequest400 [] "Jeton invalide!"
     where 
         validatTokenHeader :: Request -> Boolean
         validatTokenHeader req = ...
 ```
 
-Because we are modelling the middleware as a function we can just compose more middleware onto one another — this means that we can control the order of the middlewares based on how we compose the functions.
+Comme nous modélisons le middleware en tant que fonction, nous pouvons simplement composer plusieurs middleware les uns sur les autres - cela signifie que nous pouvons contrôler l'ordre des middlewares en fonction de la façon dont nous composons les fonctions.
 
 ```purescript
 type Middleware = Application -> Application
@@ -106,4 +106,4 @@ myCustomMiddleware2 :: Middleware
 myCustomMiddleware app1 app2 = ...
 ```
 
-## WAI Request `Vault` (Under Construction)
+## WAI Request `Vault` (En Construction)
