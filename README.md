@@ -86,7 +86,7 @@ Middleware is an application transformer. That is, a function from application t
 type Middleware = Application -> Application
 ```
 
-Because these are simply function, they can be composed in any order.
+Because these are simply functions, they can be composed in any order.
 
 ```purescript
 middlewares :: Middleware 
