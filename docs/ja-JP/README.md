@@ -68,7 +68,7 @@ user@user:~$ spago install wai
 </br>
 
 ## `アプリケーション`
-WAIはリクエストレスポンスフローを`Application`型で原型しています。
+WAIはリクエストレスポンスフローを`Application`型で表現します。
 
 ```purescript
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
