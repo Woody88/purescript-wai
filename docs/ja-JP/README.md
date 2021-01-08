@@ -1,8 +1,7 @@
 <div align="center">
-<h1>
-WAI</br>
-Web Application Interface 
-</h1>
+  <h1>
+    <code>WAI</code>: Web Application Interface
+  </h1>
 </div>
 
 <p align="center">
@@ -28,13 +27,14 @@ Web Application Interface
   &nbsp;
 </p>
 
-WebアプリケーションとWebサーバ間の通信のための共通プロトコル(型)を提供するライブラリです。
+WebアプリケーションとWebサーバ間の通信のための共通プロトコルを提供するライブラリです。
 
 ## インストール
 
 ***このライブラリはまだ公開されていません。 
 以下の詳細を packages.dhall に追加することで、本パッケージをインストールすることができます。
 <details>  
+  <summary><strong>Spagoで</strong></summary>
 
 ```dhall
 let additions =
@@ -59,43 +59,33 @@ let additions =
         }
   }
 ```
+
 ```console
 user@user:~$ spago install wai
 ```
 </details>
+
 </br>
 
-## WAI `アプリケーション`
-WAIは`Application`と呼ばれるリクエスト/レスポンスの流れを単純な[CPS](https://ja.wikipedia.org/wiki/継続継続渡しスタイル)関数として表現する。`Application`はリクエストと継続関数を受け取ってから応答を非同期に実行します。継続関数が応答の送信に成功した場合は `ResponseReceived` という値を返す。
+## `アプリケーション`
+WAIはリクエストレスポンスフローを`Application`型で原型しています。
 
 ```purescript
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 ```
+`Application`とは、レスポンスを送信するための継続関数と、リクエストを受け取る関数です。
 
-## WAI `ミドルウェア`
-二つの `Application` を構成することで `Middleware` を原型することができます。これにより、リクエスト/レスポンスがメインの `Application` に渡す前に変換/検査することが得られます。
+## `ミドルウェア`
+
+ミドルウェアはアプリケーション変換子、つまりアプリケーションからアプリケーションへの関数です。
 
 ```purescript
 type Middleware = Application -> Application
-
--- Stringから 'Response' を作成します。
--- この関数はこのライブラリで提供されています。
-responseStr :: Status -> ResponseHeaders -> String -> Response
-
-myCustomMiddleware :: Middleware 
-myCustomMiddleware app req send 
-    | validatTokenHeader req = app req send 
-    | otherwise              = send $ responseStr badRequest400 [] "無効なトークン！"
-    where 
-        validatTokenHeader :: Request -> Boolean
-        validatTokenHeader req = ...
 ```
 
-ミドルウェアは関数なので、より多くのミドルウェアを互いに組み合わせることができます。
+これらは単なる関数なので、好きな順番で合成することができます。
 
 ```purescript
-type Middleware = Application -> Application
-
 middlewares :: Middleware 
 middlewares = myCustomMiddleware1 >>> myCustomMiddleware2
 
@@ -104,6 +94,22 @@ myCustomMiddleware1 app1 app2 = ...
 
 myCustomMiddleware2 :: Middleware 
 myCustomMiddleware app1 app2 = ...
+```
+
+これにより、宣言的で合成可能なミドルウェアを記述することができます:
+
+```purescript
+requireAuthToken :: Middleware 
+requireAuthToken app req send 
+    | hasAuthToken req = app req send 
+    | otherwise        = send $ responseStr unauthorized401 [] "無効なトークン！"
+    where 
+        hasAuthToken :: Request -> Boolean
+        hasAuthToken req = ...
+
+-- Stringから 'Response' を作成します。
+-- この関数はこのライブラリで提供されています。
+responseStr :: Status -> ResponseHeaders -> String -> Response
 ```
 
 ## WAIリクエスト `Vault` (TODO)
