@@ -105,7 +105,7 @@ This enables us to write declarative, composable middleware:
 requireAuthToken :: Middleware 
 requireAuthToken app req send 
     | hasAuthToken req = app req send 
-    | otherwise        = send $ responseStr badRequest400 [] "Invalid Token!"
+    | otherwise        = send $ responseStr unauthorized401 [] "Missing Token!"
     where 
         hasAuthToken :: Request -> Boolean
         hasAuthToken req = ...
