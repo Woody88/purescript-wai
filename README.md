@@ -1,8 +1,7 @@
 <div align="center">
-<h1>
-WAI</br>
-Web Application Interface 
-</h1>
+  <h1>
+    <code>WAI</code>: Web Application Interface
+  </h1>
 </div>
 
 <p align="center">
@@ -28,13 +27,15 @@ Web Application Interface
   &nbsp;
 </p>
 
-A library that provides common protocol (types) for communication between web applications and web servers. 
+This library provides a common interface for communication between web applications and web servers. 
 
 ## Installation
 
 ***This library is not yet published to pursuit.***  
 You can install this package by adding the details below to your packages.dhall:
-<details>  
+
+<details>
+  <summary><strong>Using Spago</strong></summary>
 
 ```dhall
 let additions =
@@ -59,43 +60,35 @@ let additions =
         }
   }
 ```
+
 ```console
 user@user:~$ spago install wai
 ```
 </details>
+
 </br>
 
-## WAI `Application`
-WAI represents request/response flow, referred to as `Application`, as a simple [CPS](https://en.wikipedia.org/wiki/Continuation-passing_style) function. An `Application` will accept a request and a continuation function that asynchronously performs the response. If the continuation function successfully sends the response, a `ResponseReceived` value is returned. 
+## `Application`
+
+WAI models applications using a request-response flow.
 
 ```purescript
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 ```
 
-## WAI `Middleware`
-By composing two `Application`s we can model a `Middleware`. This gives the ability to transform/inspect the request/response before it is delagated to the main `Application`. 
+An application is a function that receives a request along with a continuation function for sending the response.
+
+## `Middleware`
+
+Middleware is an application transformer. That is, a function from application to application:
 
 ```purescript
 type Middleware = Application -> Application
-
--- Creating 'Response' from a string
--- This function is provided by this library. 
-responseStr :: Status -> ResponseHeaders -> String -> Response
-
-myCustomMiddleware :: Middleware 
-myCustomMiddleware app req send 
-    | validatTokenHeader req = app req send 
-    | otherwise              = send $ responseStr badRequest400 [] "Invalid Token!"
-    where 
-        validatTokenHeader :: Request -> Boolean
-        validatTokenHeader req = ...
 ```
 
-Because we are modelling the middleware as a function we can just compose more middleware onto one another — this means that we can control the order of the middlewares based on how we compose the functions.
+Because these are simply functions, they can be composed in any order.
 
 ```purescript
-type Middleware = Application -> Application
-
 middlewares :: Middleware 
 middlewares = myCustomMiddleware1 >>> myCustomMiddleware2
 
@@ -106,4 +99,20 @@ myCustomMiddleware2 :: Middleware
 myCustomMiddleware app1 app2 = ...
 ```
 
-## WAI Request `Vault` (Under Construction)
+This enables us to write declarative, composable middleware:
+
+```purescript
+requireAuthToken :: Middleware 
+requireAuthToken app req send 
+    | hasAuthToken req = app req send 
+    | otherwise        = send $ responseStr unauthorized401 [] "Missing Token!"
+    where 
+        hasAuthToken :: Request -> Boolean
+        hasAuthToken req = ...
+
+-- Creating a `Response` from a string. This helper function is provided by WAI. 
+responseStr :: Status -> ResponseHeaders -> String -> Response
+```
+
+
+## Request `Vault` (Under Construction)
