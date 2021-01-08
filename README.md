@@ -76,7 +76,7 @@ WAI models applications using a request-response flow.
 type Application = Request -> (Response -> Aff ResponseReceived) -> Aff ResponseReceived
 ```
 
-An application is a function that receives a request along with a continuation function for sending the response
+An application is a function that receives a request along with a continuation function for sending the response.
 
 ## `Middleware`
 
