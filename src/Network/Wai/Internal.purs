@@ -41,7 +41,7 @@ derive instance newtypeRequest :: Newtype Request _
 
 data Response = ResponseString H.Status H.ResponseHeaders String
               | ResponseStream H.Status H.ResponseHeaders (Readable ())
-              | ResponseSocket (Socket -> Maybe Buffer -> Aff Unit)    -- ^ Raw request socket and the first packet of the tunneling stream
+              | ResponseSocket (Socket -> Maybe Buffer -> Aff Unit)    -- ^ Raw request socket, special uses case need when upgrade request (i.e: websocket).
               | ResponseFile H.Status H.ResponseHeaders String (Maybe FilePart)
 
 data RequestBodyLength = ChunkedBody | KnownLength Int 
