@@ -93,10 +93,10 @@ middlewares :: Middleware
 middlewares = myCustomMiddleware1 >>> myCustomMiddleware2
 
 myCustomMiddleware1 :: Middleware 
-myCustomMiddleware1 app1 app2 = ...
+myCustomMiddleware1 app req send = ...
 
 myCustomMiddleware2 :: Middleware 
-myCustomMiddleware app1 app2 = ...
+myCustomMiddleware app req send = ...
 ```
 
 This enables us to write declarative, composable middleware:
@@ -110,9 +110,8 @@ requireAuthToken app req send
         hasAuthToken :: Request -> Boolean
         hasAuthToken req = ...
 
--- Creating a `Response` from a string. This helper function is provided by WAI. 
+-- Creates a `Response` from a string. This helper function is provided by WAI. 
 responseStr :: Status -> ResponseHeaders -> String -> Response
 ```
-
 
 ## Request `Vault` (Under Construction)
