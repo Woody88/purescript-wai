@@ -31,7 +31,7 @@ defaultRequest :: Request
 defaultRequest = Request
     { url: "" 
     , method: H.GET
-    , httpVersion: H.http10  
+    , httpVersion: H.http11
     , headers: []
     , pathInfo: []
     , queryString: []
