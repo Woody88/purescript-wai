@@ -127,11 +127,6 @@ let additions =
             , repo = "https://github.com/Woody88/purescript-http-types.git"
             , version = "master"
             }
-        , vault =
-            { dependencies =   [ "console", "effect" , "functions" , "maybe" , "prelude" , "psci-support" , "refs" ]
-            , repo = "https://github.com/Woody88/purescript-vault.git"
-            , version = "master"
-            }
         }
 
 in  upstream // overrides // additions
