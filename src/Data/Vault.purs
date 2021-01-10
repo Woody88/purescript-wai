@@ -18,28 +18,22 @@ import Data.Vault.Internal (UniqueKey, _newKey)
 import Effect (Effect)
 import Effect.Ref (Ref)
 import Effect.Ref as Ref
-import Effect.Unsafe (unsafePerformEffect)
+import Unsafe.Coerce (unsafeCoerce)
+
+-- | Type that we can use tounsafely coerce any lifted type back and forth.
+data Any 
 
 -- | Key to access the vault.
 data Key a = Key UniqueKey (Ref (Maybe a)) 
 
--- | A persistent store for a single value.
-data Locker = Locker UniqueKey (Effect Unit)
-
 -- | A persistent store for values of arbitrary types.
-newtype Vault = Vault (Map UniqueKey Locker)
+newtype Vault = Vault (Map UniqueKey Any)
 
--- | Put a value into a `Locker`.
-lock :: forall a. Key a -> a -> Locker 
-lock (Key u ref) x = Locker u $ Ref.write (Just x) ref 
+toAny :: forall a. a -> Any
+toAny = unsafeCoerce
 
--- | Retrieve a value from the `Locker`.
-unlock :: forall a. Key a -> Locker -> Maybe a
-unlock (Key k ref) (Locker k' m)
-  | k == k' = unsafePerformEffect  do 
-      _ <- m
-      Ref.read ref 
-  | otherwise = Nothing 
+fromAny :: forall a. Any -> a
+fromAny = unsafeCoerce
 
 -- | Empty vault.
 empty  :: Vault  
@@ -54,11 +48,11 @@ newKey = do
 
 -- | Insert a value for a given key.
 insert :: forall a. Key a -> a -> Vault -> Vault 
-insert key@(Key k _) v (Vault m) = Vault $ Map.insert k (lock key v) m 
+insert key@(Key k _) v (Vault m) = Vault $ Map.insert k (toAny v) m 
 
 -- | Lookup the value of a key in the vault.
 lookup :: forall a. Key a -> Vault -> Maybe a 
-lookup key@(Key k _) (Vault m) = Map.lookup k m >>= unlock key
+lookup key@(Key k _) (Vault m) = fromAny <$> Map.lookup k m 
 
 -- | Delete a key from the vault.
 delete :: forall a. Key a -> Vault -> Vault 
