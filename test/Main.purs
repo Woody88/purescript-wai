@@ -3,7 +3,10 @@ module Test.Main where
 import Prelude
 
 import Effect (Effect)
-import Effect.Class.Console (log)
+import Effect.Aff (launchAff_)
+import Test.Spec.Reporter (consoleReporter)
+import Test.Spec.Runner (runSpec)
+import Test.VaultSpec as Vault
 
 main :: Effect Unit
-main = log "test not implemented"
+main = launchAff_ $ runSpec [consoleReporter] Vault.spec
