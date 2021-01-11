@@ -1,9 +1,12 @@
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Woody88/purescript-wai/master/License)
+![CI](https://github.com/Woody88/purescript-wai/workflows/CI/badge.svg?branch=master)
+
+</br>
 <div align="center">
   <h1>
     <code>WAI</code>: Web Application Interface
   </h1>
 </div>
-
 <p align="center">
   <a href="https://github.com/Woody88/purescript-wai/blob/master/README.md"
     ><img
@@ -27,7 +30,8 @@
   &nbsp;
 </p>
 
-This library provides a common interface for communication between web applications and web servers. 
+This library provides a common interface for communication between web applications and web servers.\
+_WAI cannot be used standalone, it requires a server handler such as [warp](https://github.com/Woody88/purescript-warp)._
 
 ## Installation
 
