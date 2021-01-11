@@ -139,5 +139,4 @@ Change log details can be found [here](https://github.com/Woody88/purescript-wai
 ## License
 
 Licensed under the [MIT](https://github.com/Woody88/purescript-wai/blob/vault/LICENSE) license.
-
 Copyright (c) 2021 Woodson Delhia. All rights reserved.
