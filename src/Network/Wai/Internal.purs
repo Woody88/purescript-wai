@@ -1,11 +1,4 @@
-module Network.Wai.Internal 
-    ( Request(..)
-    , FilePart(..)
-    , RequestBodyLength(..)
-    , Response(..)
-    , ResponseReceived
-    )
-    where 
+module Network.Wai.Internal where 
 
 import Prelude
 
