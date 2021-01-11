@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Woody88/purescript-wai/blob/master/LICENSE)
-![CI](https://github.com/Woody88/purescript-wai/workflows/CI/badge.svg?branch=master)
+![CI](https://github.com/Woody88/purescript-wai/actions?query=workflow%3ACI)
 
 </br>
 <div align="center">
