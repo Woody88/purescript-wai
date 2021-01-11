@@ -30,9 +30,9 @@ spec = do
 
       let kValue = "secret"
       let vault  = Vault.insert k1 kValue Vault.empty
-
+        
       Vault.lookup k1 vault `shouldEqual` Just kValue 
-      Vault.lookup k2 vault `shouldEqual` Nothing
+      Vault.lookup k2 vault `shouldEqual` (Nothing :: Maybe Int)
 
     it "creates and delete values" do 
       k <- liftEffect keyString
@@ -44,4 +44,4 @@ spec = do
       Vault.lookup keyBoolean vault `shouldEqual` Just true
 
       let vault'  = Vault.delete k vault 
-      Vault.lookup k vault' `shouldEqual` Nothing
+      Vault.lookup k vault' `shouldEqual` (Nothing :: Maybe Int)
