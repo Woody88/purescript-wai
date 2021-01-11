@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Woody88/purescript-wai/master/License)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Woody88/purescript-wai/blob/master/LICENSE)
 ![CI](https://github.com/Woody88/purescript-wai/workflows/CI/badge.svg?branch=master)
 
 </br>
@@ -32,6 +32,17 @@
 
 This library provides a common interface for communication between web applications and web servers.\
 _WAI cannot be used standalone, it requires a server handler such as [warp](https://github.com/Woody88/purescript-warp)._
+
+
+Table of Contents
+-----------------
+
+  * [Installation](#installation)
+  * [Application](#application)
+  * [Middleware](#middleware)
+  * [Contributing](#contributing)
+  * [Changelog](#changelog)
+  * [License](#license)
 
 ## Installation
 
@@ -117,5 +128,16 @@ requireAuthToken app req send
 -- Creates a `Response` from a string. This helper function is provided by WAI. 
 responseStr :: Status -> ResponseHeaders -> String -> Response
 ```
+## Contributing
 
-## Request `Vault` (Under Construction)
+If you are interested in fixing issues and contributing directly to the code base,
+please see the [contributing guidelines](https://github.com/Woody88/purescript-wai/blob/master/CONTRIBUTING.md).
+
+## Changelog
+
+Change log details can be found [here](https://github.com/Woody88/purescript-wai/blob/master/CHANGELOG.md) 
+## License
+
+Licensed under the [MIT](https://github.com/Woody88/purescript-wai/blob/vault/LICENSE) license.
+
+Copyright (c) 2021 Woodson Delhia. All rights reserved.
