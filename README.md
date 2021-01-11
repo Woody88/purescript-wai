@@ -34,7 +34,6 @@
 This library provides a common interface for communication between web applications and web servers.\
 _WAI cannot be used standalone, it requires a server handler such as [warp](https://github.com/Woody88/purescript-warp)._
 
-
 Table of Contents
 -----------------
 
