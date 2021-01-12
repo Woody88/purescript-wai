@@ -12,7 +12,7 @@
   <a href="https://github.com/Woody88/purescript-wai/blob/master/README.md"
     ><img
       height="30"
-      src="https://raw.githubusercontent.com/Woody88/purescript-wai/master/docs/media/flag-ca.png"
+      src="https://raw.githubusercontent.com/Woody88/purescript-wai/master/docs/media/flag-us.png"
       alt="English" /></a>
   &nbsp;
   <a
@@ -33,6 +33,8 @@
 
 This library provides a common interface for communication between web applications and web servers.\
 _WAI cannot be used standalone, it requires a server handler such as [warp](https://github.com/Woody88/purescript-warp)._
+
+[![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=anuraghazra)](https://github.com/woody88/github-readme-stats)
 
 Table of Contents
 -----------------
