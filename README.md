@@ -49,8 +49,7 @@ Table of Contents
 ***This library is not yet published to pursuit.***  
 You can install this package by adding the details below to your packages.dhall:
 
-<details>
-  <summary><strong>Using Spago</strong></summary>
+<summary><strong>Using Spago</strong></summary>
 
 ```dhall
 let additions =
@@ -74,9 +73,6 @@ let additions =
 ```console
 user@user:~$ spago install wai
 ```
-</details>
-
-</br>
 
 ## `Application`
 
@@ -131,6 +127,7 @@ please see the [contributing guidelines](https://github.com/Woody88/purescript-w
 ## Changelog
 
 Change log details can be found [here](https://github.com/Woody88/purescript-wai/blob/master/CHANGELOG.md) 
+
 ## License
 
 Licensed under the [MIT](https://github.com/Woody88/purescript-wai/blob/vault/LICENSE) license.
