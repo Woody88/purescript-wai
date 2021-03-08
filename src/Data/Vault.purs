@@ -22,6 +22,7 @@ import Unsafe.Coerce (unsafeCoerce)
 data Any 
 
 -- | Key to access the vault.
+type Key :: forall k. k -> Type
 type Key a = UniqueKey
 
 -- | A persistent store for values of arbitrary types.
